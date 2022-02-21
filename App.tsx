@@ -64,9 +64,9 @@ const App = () => {
             <Draggable
               x={75}
               y={100}
-              renderSize={56}
-              renderColor="black"
-              renderText="DDDDD me"
+              renderSize={45}
+              renderColor="#5B6FD2"
+              renderText="Drag"
               isCircle
               // shouldReverse
               onLongPress={() => console.log('long press')}
@@ -78,7 +78,14 @@ const App = () => {
             <Draggable />
           </View>
           <RNSketchCanvas
-            containerStyle={{backgroundColor: 'white', flex: 1}}
+            localSourceImage={
+              {
+                filename: 'playbook.png', // 'playbook.png',
+                directory: RNSketchCanvas.MAIN_BUNDLE,
+                mode: 'AspectFit',
+              } as any
+            }
+            containerStyle={{backgroundColor: 'transparent', flex: 1}}
             canvasStyle={{backgroundColor: 'transparent', flex: 1}}
             defaultStrokeIndex={0}
             defaultStrokeWidth={5}
