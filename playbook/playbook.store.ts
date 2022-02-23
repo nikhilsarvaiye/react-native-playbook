@@ -25,6 +25,7 @@ export class PlaybookStore {
       hasNext: computed,
       isPlaying: observable,
       isPaused: observable,
+      deleteMove: action,
     });
   }
 
@@ -69,16 +70,24 @@ export class PlaybookStore {
       this.isPaused = false;
       this.isPlaying = true;
       this.timeInterval = setInterval(() => {
-        console.log('playing' + this.currentMoveIndex);
+        console.log('playing move ' + (this.currentMoveIndex + 1));
         this.next();
         if (this.currentMoveIndex === this.moves.length - 1) {
-          console.log('stopping' + this.currentMoveIndex);
-          clearInterval(this.timeInterval);
-          this.isPlaying = false;
-          this.first();
+          setTimeout(() => {
+            this.stop();
+          }, interval);
         }
       }, interval);
     }
+  };
+
+  replay = () => {
+    this.isPaused = false;
+    this.currentMoveIndex = 0;
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+    this.play();
   };
 
   pause = () => {
@@ -89,9 +98,13 @@ export class PlaybookStore {
   };
 
   stop = () => {
+    console.log(
+      'stopping playbook - current move ' + (this.currentMoveIndex + 1),
+    );
     this.isPlaying = false;
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
+      this.first();
     }
   };
 
@@ -115,7 +128,7 @@ export class PlaybookStore {
     }
   };
 
-  next = () => {
+  next = (allowAdd = false) => {
     if (
       this.currentMoveIndex > -1 &&
       this.currentMoveIndex < this.moves.length - 1
@@ -123,6 +136,21 @@ export class PlaybookStore {
       this.currentMove = this.moves[this.currentMoveIndex + 1];
       this.setCurrentMoveIndex();
       this.currentMove.draw();
+    } else if (allowAdd) {
+      this.addMove();
+    }
+  };
+
+  deleteMove = () => {
+    if (this.currentMove) {
+      console.log('deleting move ' + (this.currentMoveIndex + 1));
+      this.moves.splice(this.currentMoveIndex, 1);
+      this.currentMoveIndex--;
+    }
+    if (this.moves.length === 0) {
+      this.addMove();
+    } else {
+      this.moveTo(this.currentMoveIndex);
     }
   };
 

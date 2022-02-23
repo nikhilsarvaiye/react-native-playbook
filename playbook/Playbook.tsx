@@ -1,10 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Button, Text} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Button,
+  Text,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import Draggable from 'react-native-draggable';
 import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 import {Observer} from 'mobx-react-lite';
+import {
+  Button as RButton,
+  ButtonGroup,
+  withTheme,
+  Text as RText,
+} from 'react-native-elements';
 import Slider from '@react-native-community/slider';
 import {PlaybookStore} from './playbook.store';
 import {players, settings} from './playbook.config';
@@ -76,39 +89,35 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
       {() => (
         <View style={styles.container}>
           {!playbook.isPlaying && (
-            <View style={{flexDirection: 'row'}}>
-              <Button
-                title="Prev Move"
-                onPress={() => {
-                  if (canvas.current) {
-                    playbook?.prev();
-                  }
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <RButton
+                title={'Save'}
+                buttonStyle={{
+                  ...styles.topButtonStyle,
+                  backgroundColor: '#009b56',
                 }}
-                disabled={!playbook.hasPrev}
-              />
-              <Button
-                title="Next Move"
-                onPress={() => {
-                  if (canvas.current) {
-                    playbook?.next();
-                  }
-                }}
-                disabled={!playbook.hasNext}
-              />
-              <Button
-                title="Add Move"
-                onPress={() => {
-                  if (canvas.current) {
-                    playbook?.addMove();
-                  }
-                }}
-              />
-
-              <Button
-                title="Save All"
-                color={'green'}
+                containerStyle={styles.topButtonContainerStyle}
                 onPress={() => {
                   // TODO: save this whole object as document
+                }}
+              />
+              <RButton
+                title={'Delete Move'}
+                buttonStyle={{
+                  ...styles.topButtonStyle,
+                  backgroundColor: 'red',
+                }}
+                containerStyle={{
+                  ...styles.topButtonContainerStyle,
+                  width: 100,
+                }}
+                onPress={() => {
+                  playbook?.deleteMove();
                 }}
               />
             </View>
@@ -163,69 +172,14 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
               }}
             />
           </View>
-          {/* <Text>{(playbook.getCurrentMoveIndex() + 1) of Total {playbook.moves.length}}</Text> */}
-          {!playbook.isPlaying && (
-            <View>
-              <Button
-                title="Undo"
-                onPress={() => {
-                  playbook?.currentMove?.undo();
-                }}
-              />
-              <Button
-                title="Clear"
-                onPress={() => {
-                  playbook?.currentMove?.clear();
-                }}
-              />
-              <Button
-                title="Play"
-                color={'green'}
-                onPress={() => {
-                  playbook?.play();
-                }}
-              />
-            </View>
-          )}
-          {playbook.isPaused && (
-            <View>
-              <Button
-                title="Play"
-                color={'green'}
-                onPress={() => {
-                  playbook?.play();
-                }}
-              />
-            </View>
-          )}
-          {playbook.isPlaying && !playbook?.isPaused && (
-            <View>
-              <Button
-                title="Pause"
-                onPress={() => {
-                  playbook?.pause();
-                }}
-              />
-            </View>
-          )}
-          {playbook?.isPlaying && (
-            <View>
-              <Button
-                title="Stop"
-                color={'red'}
-                onPress={() => {
-                  playbook?.stop();
-                }}
-              />
-            </View>
-          )}
+
           {playbook && (
-            <View>
-              <Text>
-                {playbook.currentMoveIndex + 1} of {playbook.moves.length}
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={{color: 'white', marginTop: 5}}>
+                {playbook.currentMoveIndex + 1} of {playbook.moves.length} Moves
               </Text>
               <Slider
-                style={{width: 200, height: 40}}
+                style={{width: '80%', height: 20}}
                 minimumValue={0}
                 maximumValue={playbook?.moves.length}
                 minimumTrackTintColor="#FFFFFF"
@@ -234,6 +188,135 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
                   playbook.moveTo(value);
                 }}
                 value={playbook.currentMoveIndex}
+              />
+            </View>
+          )}
+          {!playbook.isPlaying && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <RButton
+                title={'Prev'}
+                buttonStyle={styles.topButtonStyle}
+                containerStyle={styles.topButtonContainerStyle}
+                onPress={() => {
+                  playbook?.prev();
+                }}
+              />
+              <RButton
+                icon={{
+                  ...styles.iconStyle,
+                  name: 'times',
+                }}
+                buttonStyle={styles.buttonStyle}
+                containerStyle={styles.buttonContainerStyle}
+                onPress={() => {
+                  playbook?.currentMove?.clear();
+                }}
+              />
+              <RButton
+                icon={{
+                  ...styles.iconStyle,
+                  name: 'play',
+                  color: 'white',
+                }}
+                buttonStyle={{
+                  ...styles.buttonStyle,
+                  backgroundColor: 'red',
+                }}
+                containerStyle={styles.buttonContainerStyle}
+                onPress={() => {
+                  playbook?.play();
+                }}
+              />
+              <RButton
+                icon={{
+                  ...styles.iconStyle,
+                  name: 'undo',
+                }}
+                buttonStyle={styles.buttonStyle}
+                containerStyle={styles.buttonContainerStyle}
+                onPress={() => {
+                  playbook?.currentMove?.undo();
+                }}
+              />
+              <RButton
+                title={'Next'}
+                buttonStyle={styles.topButtonStyle}
+                containerStyle={styles.topButtonContainerStyle}
+                onPress={() => {
+                  playbook?.next(true);
+                }}
+              />
+            </View>
+          )}
+          {playbook.isPlaying && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <RButton
+                icon={{
+                  ...styles.iconStyle,
+                  name: 'step-backward',
+                }}
+                buttonStyle={{
+                  ...styles.buttonStyle,
+                }}
+                containerStyle={styles.buttonContainerStyle}
+                onPress={() => {
+                  playbook?.replay();
+                }}
+              />
+              {playbook.isPaused ? (
+                <RButton
+                  icon={{
+                    ...styles.iconStyle,
+                    name: 'play',
+                    color: 'white',
+                  }}
+                  buttonStyle={{
+                    ...styles.buttonStyle,
+                    backgroundColor: 'red',
+                  }}
+                  containerStyle={styles.buttonContainerStyle}
+                  onPress={() => {
+                    playbook?.play();
+                  }}
+                />
+              ) : (
+                <RButton
+                  icon={{
+                    ...styles.iconStyle,
+                    name: 'pause',
+                  }}
+                  buttonStyle={{
+                    ...styles.buttonStyle,
+                    backgroundColor: '#ddd',
+                  }}
+                  containerStyle={styles.buttonContainerStyle}
+                  onPress={() => {
+                    playbook?.pause();
+                  }}
+                />
+              )}
+              <RButton
+                icon={{
+                  ...styles.iconStyle,
+                  name: 'stop',
+                }}
+                buttonStyle={{
+                  ...styles.buttonStyle,
+                }}
+                containerStyle={styles.buttonContainerStyle}
+                onPress={() => {
+                  playbook?.stop();
+                }}
               />
             </View>
           )}
@@ -251,7 +334,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   container: {
-    backgroundColor: 'black',
+    backgroundColor: '#181d35',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -260,5 +343,35 @@ const styles = StyleSheet.create({
   },
   dragDrop: {
     zIndex: 999999,
+  },
+  iconStyle: {
+    type: 'font-awesome',
+    size: 15,
+    name: 'play',
+    color: 'black',
+  },
+  buttonStyle: {
+    backgroundColor: '#ffffff',
+    borderWidth: 0,
+    borderRadius: 50,
+  },
+  buttonContainerStyle: {
+    width: 60,
+    height: 30,
+    marginHorizontal: 5,
+    marginVertical: 0,
+  },
+  topButtonStyle: {
+    // backgroundColor: '#ffffff',
+    borderWidth: 0,
+    borderRadius: 50,
+    padding: 3,
+    marginTop: 5,
+  },
+  topButtonContainerStyle: {
+    width: 80,
+    height: 40,
+    marginHorizontal: 5,
+    marginVertical: 10,
   },
 });
