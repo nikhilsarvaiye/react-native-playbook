@@ -6,6 +6,7 @@ export class PlaybookMoveStore {
   private canvas: SketchCanvas;
   players: PlaybookPlayer[] = [];
   paths: Path[] = [];
+  notes: string = '';
   strokeColor: string = 'red';
 
   constructor(canvas: SketchCanvas, players?: PlaybookPlayer[]) {
@@ -23,6 +24,7 @@ export class PlaybookMoveStore {
 
     makeObservable(this, {
       players: observable,
+      notes: observable,
     });
   }
 

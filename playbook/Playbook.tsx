@@ -8,16 +8,12 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import Draggable from 'react-native-draggable';
 import {SketchCanvas} from '@terrylinla/react-native-sketch-canvas';
 import {Observer} from 'mobx-react-lite';
-import {
-  Button as RButton,
-  ButtonGroup,
-  withTheme,
-  Text as RText,
-} from 'react-native-elements';
+import {Button as RButton} from 'react-native-elements';
 import Slider from '@react-native-community/slider';
 import {PlaybookStore} from './playbook.store';
 import {players, settings} from './playbook.config';
@@ -131,22 +127,23 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
                   x={player.x}
                   y={player.y}
                   renderSize={settings.playerSize}
-                  renderColor={settings.playerColor}
+                  renderColor={player.active ? 'red' : settings.playerColor}
                   renderText={player.title}
                   isCircle
                   key={index}
                   onDrag={(event, gestureState) => {
-                    // setPlayerPosition({
-                    //   id: player.id,
-                    //   x: gestureState.moveX,
-                    //   y: gestureState.moveY,
-                    // });
-                    // a.x0 = gestureState.x0;
-                    // a.y0 = gestureState.y0;
+                    // player.x = gestureState.moveX;
+                    // player.y = gestureState.moveY;
                   }}
-                  onDragRelease={() => {
-                    // player.x = a.x0;
-                    // player.y = a.y0;
+                  onDragRelease={(event, gestureState) => {
+                    // player.x = gestureState.moveX;
+                    // player.y = gestureState.moveY;
+                  }}
+                  onLongPress={() => {
+                    playbook.currentMove?.players.forEach(x => {
+                      x.active = false;
+                    });
+                    player.active = true;
                   }}
                 />
               );

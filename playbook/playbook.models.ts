@@ -15,4 +15,7 @@ export interface PlaybookPlayer {
   draggable: boolean;
   /// title
   title: string;
+
+  //
+  active: boolean;
 }

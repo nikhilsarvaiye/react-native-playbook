@@ -1,0 +1,42 @@
+{
+    "id": "auto increment id - ObjectId",
+    "teamId": "team Id ref TeamMaster - ObjectId - Optional",
+    "gameId": "game Id ref GameEventDetails - ObjectId - Optional",
+    "createdBy": "Playbook created by user Id - ObjectId",
+    "updatedBy": "Playbook updated by user Id - ObjectId",
+    "useJerseyNumbers": "boolean field to use jersey number or not - boolean",
+    "status": "enum with values (Draft - 0, Published - 1, Archived - 2)",
+    "videoPlaybackInterval": "video playback interval - number",
+    "moves": [
+        {
+            "paths": [
+                {
+                    "drawer": "user id - incase of tomorrow/future we want to have user based paths - string",
+                    "size": {
+                        "width": "the width of drawer's canvas - number",
+                        "height": "the height of drawer's canvas - number"
+                    },
+                    "path": {
+                        "id": "unique path id - number",
+                        "color": "path color code - string",
+                        "width": "path width - number",
+                        "data": [
+                            "296.11,281.34",
+                            "293.52,284.64",
+                            "290.75,289.73" 
+                        ]
+                    }
+                }
+            ],
+            "players": [
+                {
+                    "id": "should be used as unique identifier - number",
+                    "title": "player title or jersey number - string",
+                    "x": "x-coordinate inside canvas - number",
+                    "y": "y-coordinate inside canvas - number",
+                    "draggable": "is draggable inside canvas - boolean"
+                }
+            ]
+        }
+    ]
+}
