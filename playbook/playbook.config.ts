@@ -13,6 +13,7 @@ export const players: PlaybookPlayer[] = [
     y: 350,
     draggable: true,
     title: '1',
+    active: true,
   },
   {
     id: 2,
@@ -20,6 +21,7 @@ export const players: PlaybookPlayer[] = [
     y: 350,
     draggable: true,
     title: '2',
+    active: false,
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ export const players: PlaybookPlayer[] = [
     y: 260,
     draggable: true,
     title: '3',
+    active: false,
   },
   {
     id: 4,
@@ -34,6 +37,7 @@ export const players: PlaybookPlayer[] = [
     y: 175,
     draggable: true,
     title: '4',
+    active: false,
   },
   {
     id: 5,
@@ -41,5 +45,6 @@ export const players: PlaybookPlayer[] = [
     y: 175,
     draggable: true,
     title: '5',
+    active: false,
   },
 ];

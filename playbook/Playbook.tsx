@@ -121,7 +121,6 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
           <View style={styles.dragDrop}>
             {/* <Text>{JSON.stringify(playbook?.currentMove?.players)}</Text> */}
             {playbook?.currentMove?.players.map((player, index) => {
-              const a: any = {};
               return (
                 <Draggable
                   x={player.x}
@@ -131,13 +130,10 @@ export const Playbook = ({playbook}: {playbook: PlaybookStore}) => {
                   renderText={player.title}
                   isCircle
                   key={index}
-                  onDrag={(event, gestureState) => {
-                    // player.x = gestureState.moveX;
-                    // player.y = gestureState.moveY;
-                  }}
-                  onDragRelease={(event, gestureState) => {
-                    // player.x = gestureState.moveX;
-                    // player.y = gestureState.moveY;
+                  onDragRelease={(event, gestureState, bounds) => {
+                    player.x = bounds.left;
+                    player.y = bounds.top;
+                    playbook?.currentMove?.reDraw();
                   }}
                   onLongPress={() => {
                     playbook.currentMove?.players.forEach(x => {

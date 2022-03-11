@@ -1,4 +1,4 @@
-import {makeObservable, observable} from 'mobx';
+import {action, makeObservable, observable} from 'mobx';
 import {SketchCanvas, Path} from '@terrylinla/react-native-sketch-canvas';
 import {PlaybookPlayer} from './playbook.models';
 
@@ -25,12 +25,23 @@ export class PlaybookMoveStore {
     makeObservable(this, {
       players: observable,
       notes: observable,
+      reDraw: action,
     });
   }
 
   draw = () => {
     this.canvas.clear();
     this.paths.forEach(path => this.canvas.addPath(path));
+  };
+
+  reDraw = () => {
+    const _players = JSON.parse(JSON.stringify(this.players));
+    this.players.splice(0, this.players.length);
+    this.save();
+    setTimeout(() => {
+      this.draw();
+      this.players.push(..._players);
+    });
   };
 
   undo = () => {
